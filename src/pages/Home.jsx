@@ -8,16 +8,20 @@ import { TagsBlock } from '../components/TagsBlock';
 import { CommentsBlock } from '../components/CommentsBlock';
 import axios from '../axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchPosts } from '../redux/slices/posts';
+import { fetchPosts, fetchTags } from '../redux/slices/posts';
 
 export const Home = () => {
   const dispatch = useDispatch();
   const { posts, tags } = useSelector(state => state.posts);
+  const { auth } = useSelector(state => state);
+  console.log(auth);
 
   const isPostsLoading = posts.status === 'loading';
+  const isTagsLoading = tags.status === 'loading';
 
   useEffect(() => {
     dispatch(fetchPosts())
+    dispatch(fetchTags());
   }, []);
 
 
@@ -33,21 +37,21 @@ export const Home = () => {
             <Post key={index} isLoading={true} />
           ) : (
             <Post
-              id={obj._id}
+              _id={obj._id}
               key={obj._id}
               title={obj.title}
-              imageUrl="https://res.cloudinary.com/practicaldev/image/fetch/s--UnAfrEG8--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/icohm5g0axh9wjmu4oc3.png"
+              imageUrl={obj.imageUrl}
               user={obj.user}
-              createdAt={'12 июня 2022 г.'}
-              viewsCount={150}
+              createdAt={obj.createdAt}
+              viewsCount={obj.viewsCount}
               commentsCount={3}
-              tags={['react', 'fun', 'typescript']}
+              tags={obj.tags}
               isEditable
             />
           ))}
         </Grid>
         <Grid xs={4} item>
-          <TagsBlock items={['react', 'typescript', 'заметки']} isLoading={false} />
+          <TagsBlock items={tags.items} isLoading={isTagsLoading} />
           <CommentsBlock
             items={[
               {
