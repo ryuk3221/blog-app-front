@@ -11,7 +11,9 @@ export const Header = () => {
   const dispatch = useDispatch();
 
   const onClickLogout = () => {
-    dispatch(logout());
+    if (window.confirm('Вы действительно хотите выйте?')) {
+      dispatch(logout());
+    }
   };
 
   return (
