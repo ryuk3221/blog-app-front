@@ -3,11 +3,16 @@ import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import styles from './Header.module.scss';
 import Container from '@mui/material/Container';
+import { useDispatch, useSelector } from 'react-redux';
+import { isAuth, logout } from '../../redux/slices/auth';
 
 export const Header = () => {
-  const isAuth = false;
+  const isLogin = useSelector(isAuth);
+  const dispatch = useDispatch();
 
-  const onClickLogout = () => {};
+  const onClickLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <div className={styles.root}>
@@ -17,7 +22,7 @@ export const Header = () => {
             <div>ARCHAKOV BLOG</div>
           </Link>
           <div className={styles.buttons}>
-            {isAuth ? (
+            {isLogin ? (
               <>
                 <Link to="/posts/create">
                   <Button variant="contained">Написать статью</Button>
