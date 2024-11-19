@@ -13,6 +13,7 @@ export const Header = () => {
   const onClickLogout = () => {
     if (window.confirm('Вы действительно хотите выйте?')) {
       dispatch(logout());
+      window.localStorage.removeItem('token');
     }
   };
 
