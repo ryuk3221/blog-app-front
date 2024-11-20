@@ -23,11 +23,13 @@ export const Post = ({
   children,
   isFullPost,
   isLoading,
-  isEditable,
+  isEditable
 }) => {
   if (isLoading) {
     return <PostSkeleton />;
   }
+
+  console.log('isEditable', isEditable);
 
   const onClickRemove = () => { };
 
