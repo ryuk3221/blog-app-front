@@ -73,7 +73,8 @@ export const AddPost = () => {
       console.log('id добавленного поста: ', _id);
       navigate(`/posts/${_id}`);
     } catch (err) {
-
+      console.warn(err);
+      alert('Не удалось добавить пост');
     }
   }
 

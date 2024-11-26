@@ -6,10 +6,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import EyeIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import CommentIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import { Link } from 'react-router-dom';
-
+import axios from '../../axios';
 import styles from './Post.module.scss';
 import { UserInfo } from '../UserInfo';
 import { PostSkeleton } from './Skeleton';
+import { useDispatch } from 'react-redux';
+import { deletePost } from '../../redux/slices/posts';
 
 export const Post = ({
   _id,
@@ -25,13 +27,30 @@ export const Post = ({
   isLoading,
   isEditable
 }) => {
+  const dispatch = useDispatch();
+
   if (isLoading) {
     return <PostSkeleton />;
   }
 
   console.log('isEditable', isEditable);
 
-  const onClickRemove = () => { };
+  const onClickRemove = async () => {
+    try {
+      //запрос на удаление поста
+      const deletedPost = await axios.delete(`/posts/${_id}`);
+      console.log(deletedPost);
+      //оповещаю об удаленном посте
+      alert(`Пост "${deletedPost.data.title}" был удален`);
+      //изменить в redux хранилище постов
+      //код...
+      dispatch(deletePost(_id));
+
+    } catch (err) {
+      console.warn(err);
+      alert('Не удалось удалить пост');
+    }
+  };
 
   return (
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
@@ -50,7 +69,7 @@ export const Post = ({
       {imageUrl && (
         <img
           className={clsx(styles.image, { [styles.imageFull]: isFullPost })}
-          src={imageUrl}
+          src={`http://localhost:4444${imageUrl}`}
           alt={title}
         />
       )}
