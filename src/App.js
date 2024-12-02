@@ -24,6 +24,7 @@ function App() {
           <Route path="/posts/create" element={<AddPost />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
+          <Route path="/posts/:id/edit" element={<AddPost />} />
         </Routes>
 
 
