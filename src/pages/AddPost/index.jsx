@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -8,7 +8,8 @@ import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
 import { useSelector } from 'react-redux';
 import { isAuth } from '../../redux/slices/auth';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
+
 
 export const AddPost = () => {
   const [imageUrl, setImageUrl] = React.useState('');
@@ -18,6 +19,22 @@ export const AddPost = () => {
   const inputFileRef = React.useRef(null);
   const [isLoading, setLoading] = React.useState(false);
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const isEditPage = id ? true : false;
+
+  useEffect(() => {
+    if (id) {
+      axios
+        .get(`/posts/${id}`)
+        .then(res => {
+          setTitle(res.data.title);
+          setImageUrl(res.data.imageUrl);
+          setValue(res.data.text);
+          setTags(res.data.tags.join(' '));
+        });
+    }
+  }, []);
 
   const handleChangeFile = async (event) => {
     try {
@@ -67,11 +84,16 @@ export const AddPost = () => {
         tags: tags.split(' ')
       }
 
-      const { data } = await axios.post('/posts', fields);
 
-      const { _id } = data;
-      console.log('id добавленного поста: ', _id);
-      navigate(`/posts/${_id}`);
+
+      if (id) {
+        const { data } = await axios.patch(`/posts/${id}`, fields);
+        navigate(`/posts/${data._id}`);
+      } else {
+        const { data } = await axios.post('/posts', fields);
+        navigate(`/posts/${data._id}`);
+      }
+
     } catch (err) {
       console.warn(err);
       alert('Не удалось добавить пост');
@@ -86,6 +108,9 @@ export const AddPost = () => {
 
   return (
     <Paper style={{ padding: 30 }}>
+      {isEditPage && (
+        <h1 className={styles.h1}>Редактирование статьи</h1>
+      )}
       <Button
         onClick={() => inputFileRef.current.click()}
         variant="outlined"
@@ -129,7 +154,7 @@ export const AddPost = () => {
       <SimpleMDE className={styles.editor} value={value} onChange={onChange} options={options} />
       <div className={styles.buttons}>
         <Button size="large" variant="contained" onClick={() => submitPost()}>
-          Опубликовать
+          {isEditPage ? 'Сохранить' : 'Опубликовать'}
         </Button>
         <a href="/">
           <Button
