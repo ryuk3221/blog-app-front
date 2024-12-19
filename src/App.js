@@ -14,6 +14,8 @@ function App() {
     dispatch(fetchAuthMe());
   }, []);
 
+  console.log('Deploy in Vercel');
+
   return (
     <>
       <Header />

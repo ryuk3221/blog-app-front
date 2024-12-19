@@ -9,7 +9,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Skeleton from "@mui/material/Skeleton";
 
 import { SideBlock } from "./SideBlock";
-import { Padding } from "@mui/icons-material";
+
 
 export const TagsBlock = ({ items, isLoading = true }) => {
   return (
