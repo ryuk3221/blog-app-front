@@ -12,7 +12,7 @@ import { Navigate } from "react-router-dom";
 export const Login = () => {
   const auth = useSelector(isAuth);
   const dispatch = useDispatch();
-
+  console.log('Deploy in Vercel');
 
   const { register, handleSubmit, setError, formState: { errors, isValid } } = useForm({
     defaultValues: {
